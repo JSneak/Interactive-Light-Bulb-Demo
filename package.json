@@ -1,0 +1,13 @@
+{
+  "name": "Multi-Hue",
+  "version": "0.0.2",
+  "description": "Interactive Phillip Hue Demo",
+  "dependencies": {
+    "express": "^*",
+    "socket.io": "^*",
+    "huejay": "^*"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}

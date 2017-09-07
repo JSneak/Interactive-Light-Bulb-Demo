@@ -1,0 +1,76 @@
+<html>
+<head>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+	<script>
+		var socket = io();
+		var arrayOfColors = [];
+		var timer;
+
+		function changeColor(){
+			redValue = parseInt(document.getElementById('redId').value);
+			greenValue = parseInt(document.getElementById('greenId').value);
+			blueValue = parseInt(document.getElementById('blueId').value);
+			setRGB(toXY(redValue,greenValue,blueValue));
+		}
+
+		function toXY(red,green,blue){
+	        //Gamma correctie
+	        red = (red > 0.04045) ? Math.pow((red + 0.055) / (1.0 + 0.055), 2.4) : (red / 12.92);
+	        green = (green > 0.04045) ? Math.pow((green + 0.055) / (1.0 + 0.055), 2.4) : (green / 12.92);
+	        blue = (blue > 0.04045) ? Math.pow((blue + 0.055) / (1.0 + 0.055), 2.4) : (blue / 12.92);
+	        
+	        //Apply wide gamut conversion D65
+	        var X = red * 0.664511 + green * 0.154324 + blue * 0.162028;
+	        var Y = red * 0.283881 + green * 0.668433 + blue * 0.047685;
+	        var Z = red * 0.000088 + green * 0.072310 + blue * 0.986039;
+	        
+	        var fx = X / (X + Y + Z);
+	        var fy = Y / (X + Y + Z);
+	        if (isNaN(fx)) {
+	            fx = 0;
+	        }
+	        if (isNaN(fy)) {
+	            fy = 0;
+	        }
+	        
+	        return [parseFloat(fx.toPrecision(4)),parseFloat(fy.toPrecision(4))];
+        }
+
+		function setRGB(hue) {
+			console.log(hue)
+			socket.emit("change color", hue);	
+		}
+
+		function addToQueue() {
+			redValue = parseInt(document.getElementById('redId').value);
+			greenValue = parseInt(document.getElementById('greenId').value);
+			blueValue = parseInt(document.getElementById('blueId').value);
+			socket.emit("Add to Queue", toXY(redValue,greenValue,blueValue))
+		}
+
+		function turnOnOff() {
+			socket.emit("On/Off")
+		}
+
+		socket.on("Update Queue List", function(color) {
+			arrayOfColors.push(color);
+			document.getElementById("Queue").innerHTML += color + "<br>"
+		});
+
+		socket.on("Delete Item in Queue List", function() {
+			arrayOfColors.shift();
+			document.getElementById('Queue').innerHTML = arrayOfColors
+		});
+	</script>
+</head>
+<body>
+<!-- <input type="button" value="Set RGB Color" onClick="changeColor()"></input> -->
+R: <input type="text" id="redId" value="255" maxlength="3" size="3"> G: <input type="text" id="greenId" value="0" maxlength="3" size="3"> B: <input type="text" id="blueId" value="0" maxlength="3" size="3">
+<br>
+<br>
+
+<input type="button" value="Add to Queue" onClick="addToQueue()"></input>
+<p id="Queue"></p>
+<input type="button" value="Turn On and Off" onClick="turnOnOff()"></input>
+</body>
+</html>
