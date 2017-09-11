@@ -48,6 +48,10 @@
 			socket.emit("Add to Queue", toXY(redValue,greenValue,blueValue))
 		}
 
+		function turnOnOff() {
+			socket.emit("On/Off")
+		}
+
 		socket.on("Update Queue List", function(color) {
 			arrayOfColors.push(color);
 			document.getElementById("Queue").innerHTML += color + "<br>"
@@ -68,6 +72,7 @@ R: <input type="text" id="redId" value="255" maxlength="3" size="3"> G: <input t
 
 <input type="button" value="Add to Queue" onClick="addToQueue()"></input>
 <p id="Queue"></p>
+<input type="button" value="Turn On and Off" onClick="turnOnOff()"></input>
 </center>
 </body>
 </html>
