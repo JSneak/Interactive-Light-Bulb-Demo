@@ -132,9 +132,15 @@ io.on('connection', function(socket){
 	}
 });
 
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/public/index.html');
-});
+app.use(express.static(__dirname + '/public'));
+
+function send404Response(response) {
+    response.writeHead(404, {
+        "Content-Type": "text/plain"
+    });
+    response.write("Error 404: Page not found!");
+    response.end();
+};
 
 http.listen(port, function(){
   console.log('listening on *:' + port);
