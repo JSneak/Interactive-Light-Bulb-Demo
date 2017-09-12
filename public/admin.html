@@ -6,11 +6,19 @@
 		var arrayOfColors = [];
 		var timer;
 
-		function changeColor(){
+		function changeOneColor(){
 			redValue = parseInt(document.getElementById('redId').value);
 			greenValue = parseInt(document.getElementById('greenId').value);
 			blueValue = parseInt(document.getElementById('blueId').value);
-			setRGB(toXY(redValue,greenValue,blueValue));
+			lampValue = parseInt(document.getElementById("lampNumber").value);
+			setOneRGB(toXY(redValue,greenValue,blueValue),lampValue);
+		}
+
+		function changeAllColor(){
+			redValue = parseInt(document.getElementById('redId').value);
+			greenValue = parseInt(document.getElementById('greenId').value);
+			blueValue = parseInt(document.getElementById('blueId').value);
+			setAllRGB(toXY(redValue,greenValue,blueValue));
 		}
 
 		function toXY(red,green,blue){
@@ -36,9 +44,17 @@
 	        return [parseFloat(fx.toPrecision(4)),parseFloat(fy.toPrecision(4))];
         }
 
-		function setRGB(hue) {
-			console.log(hue)
-			socket.emit("change color", hue);	
+		function setOneRGB(hue, lamp) {
+			var info = {
+				"color": hue,
+				"number": lamp
+			}
+			socket.emit("change one color", info);	
+		}
+
+		function setAllRGB(hue) {
+			console.log(hue);
+			socket.emit("change all color", hue);		
 		}
 
 		function addToQueue() {
@@ -65,14 +81,20 @@
 </head>
 <body>
 <center>
-<!-- <input type="button" value="Set RGB Color" onClick="changeColor()"></input> -->
 R: <input type="text" id="redId" value="255" maxlength="3" size="3"> G: <input type="text" id="greenId" value="0" maxlength="3" size="3"> B: <input type="text" id="blueId" value="0" maxlength="3" size="3">
 <br>
 <br>
-
-<input type="button" value="Add to Queue" onClick="addToQueue()"></input>
+<input type="button" value="Set Color of One Lamp" onClick="changeOneColor()"></input>
+<select id="lampNumber">
+	<option>1</option>
+	<option>2</option>
+	<option>3</option>
+</select>
+<br>
+<input type="button" value="Set Color of All Lamps" onClick="changeAllColor()"></input><br>
+<input type="button" value="Turn On and Off" onClick="turnOnOff()"></input><br>
+<input type="button" value="Add to Queue" onClick="addToQueue()"></input><br>
 <p id="Queue"></p>
-<input type="button" value="Turn On and Off" onClick="turnOnOff()"></input>
 </center>
 </body>
 </html>
