@@ -111,12 +111,12 @@ io.on('connection', function(socket){
 	}
 
 	//Code to change singular light bulbs
-	socket.on('change color', function(color){
-  		changeColor(color);
+	socket.on('change one color', function(data){
+  		changeColor(data.color, data.number);
 	});
 
-	function changeColor(color) {
-		client.lights.getById(3)
+	function changeColor(color, lampNumber) {
+		client.lights.getById(lampNumber)
 		  .then(light => {
 		  	light.colormode = "xy";
 		   	light.xy = color;
@@ -130,6 +130,12 @@ io.on('connection', function(socket){
 		    console.log(error.stack);
 		  });
 	}
+
+	//Code to change all light bulbs
+	socket.on("change all color", function(hue){
+		changeAllColors(hue);
+	});
+
 });
 
 app.use(express.static(__dirname + '/public'));

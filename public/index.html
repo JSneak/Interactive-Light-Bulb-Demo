@@ -38,7 +38,7 @@
 
 		function setRGB(hue) {
 			console.log(hue)
-			socket.emit("change color", hue);	
+			socket.emit("change all color", hue);	
 		}
 
 		function addToQueue() {
@@ -61,7 +61,6 @@
 </head>
 <body>
 <center>
-<!-- <input type="button" value="Set RGB Color" onClick="changeColor()"></input> -->
 R: <input type="text" id="redId" value="255" maxlength="3" size="3"> G: <input type="text" id="greenId" value="0" maxlength="3" size="3"> B: <input type="text" id="blueId" value="0" maxlength="3" size="3">
 <br>
 <br>
